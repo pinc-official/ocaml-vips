@@ -1,0 +1,15 @@
+(library
+ (name vips)
+ (public_name ocaml-vips)
+ (c_library_flags
+  (:include vips_c_flags.sexp))
+ (foreign_stubs
+  (language c)
+  (names vips_stubs)
+  (flags
+   (:include vips_c_compile_flags.sexp))))
+
+(rule
+ (targets vips_c_compile_flags.sexp vips_c_flags.sexp)
+ (action
+  (run ./discover/discover.exe)))
