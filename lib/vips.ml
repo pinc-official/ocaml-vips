@@ -12,11 +12,11 @@ module Input = struct
 end
 
 module Output = struct
-  let save_file img path format ?(quality = -1) () =
+  let save_file ?(quality = 100) ~path ~format img =
     Stubs.save_file img path (Helpers.format_to_int format) quality
   ;;
 
-  let save_buffer img format ?(quality = -1) () =
+  let save_buffer ?(quality = 100) ~format img =
     Stubs.save_buffer img (Helpers.format_to_int format) quality
   ;;
 end
@@ -32,10 +32,12 @@ module Transform = struct
     Stubs.resize img width height (Helpers.kernel_to_int kernel)
   ;;
 
-  let thumbnail img ?width ?height () =
-    let w = Option.value width ~default:(-1) in
-    let h = Option.value height ~default:(-1) in
-    Stubs.thumbnail_image img w h
+  let thumbnail ?width ?height img =
+    match width, height with
+    | None, None -> img
+    | Some w, None -> Stubs.thumbnail_image img w Int.minus_one
+    | None, Some h -> Stubs.thumbnail_image img Int.minus_one h
+    | Some w, Some h -> Stubs.thumbnail_image img w h
   ;;
 
   let crop img ~left ~top ~width ~height = Stubs.crop img left top width height

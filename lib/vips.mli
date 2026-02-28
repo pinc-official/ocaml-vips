@@ -35,9 +35,9 @@ module Input : sig
 end
 
 module Output : sig
-  val save_file : image -> string -> format -> ?quality:int -> unit -> unit
+  val save_file : ?quality:int -> path:string -> format:format -> image -> unit
 
-  val save_buffer : image -> format -> ?quality:int -> unit -> bytes
+  val save_buffer : ?quality:int -> format:format -> image -> bytes
 end
 
 module Metadata : sig
@@ -52,11 +52,11 @@ module Transform : sig
   (** Produce a thumbnail from [img].
     - [~width] only → scale to width, preserve aspect ratio
     - [~height] only → scale to height, preserve aspect ratio
-    - both → scale and smart-crop (attention-based) to exact dimensions At least
-      one of [~width] or [~height] must be provided. *)
-  val thumbnail : image -> ?width:int -> ?height:int -> unit -> image
+    - both → scale and smart-crop (attention-based) to exact dimensions *)
+  val thumbnail : ?width:int -> ?height:int -> image -> image
 
   val crop : image -> left:int -> top:int -> width:int -> height:int -> image
+
   val smartcrop
     :  image
     -> width:int
@@ -64,9 +64,13 @@ module Transform : sig
     -> ?interesting:[ `Attention | `Center | `Entropy | `None ]
     -> unit
     -> image
+
   val rotate : image -> int -> image
+
   val autorotate : image -> image
+
   val flip_horizontal : image -> image
+
   val flip_vertical : image -> image
 end
 

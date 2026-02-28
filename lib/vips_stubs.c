@@ -133,23 +133,16 @@ CAMLprim value caml_vips_image_write_to_file(value img_val, value path_val, valu
 
     switch (format) {
         case 0: /* JPEG */
-            ret = (quality >= 0)
-                ? vips_jpegsave(img, path, "Q", quality, NULL)
-                : vips_jpegsave(img, path, NULL);
+            ret = vips_jpegsave(img, path, "Q", quality, NULL);
             break;
         case 1: /* PNG */
             ret = vips_pngsave(img, path, NULL);
             break;
         case 2: /* WebP */
-            ret = (quality >= 0)
-                ? vips_webpsave(img, path, "Q", quality, NULL)
-                : vips_webpsave(img, path, NULL);
+            ret = vips_webpsave(img, path, "Q", quality, NULL);
             break;
         case 3: /* AVIF */
-            ret = (quality >= 0)
-                ? vips_heifsave(img, path, "Q", quality, "compression",
-                                VIPS_FOREIGN_HEIF_COMPRESSION_AV1, NULL)
-                : vips_heifsave(img, path, "compression",
+            ret = vips_heifsave(img, path, "Q", quality, "compression",
                                 VIPS_FOREIGN_HEIF_COMPRESSION_AV1, NULL);
             break;
         case 4: /* TIFF */
@@ -179,24 +172,17 @@ CAMLprim value caml_vips_image_write_to_buffer(value img_val, value format_val, 
 
     switch (format) {
         case 0: /* JPEG */
-            ret = (quality >= 0)
-                ? vips_jpegsave_buffer(img, &buf, &len, "Q", quality, NULL)
-                : vips_jpegsave_buffer(img, &buf, &len, NULL);
+            ret = vips_jpegsave_buffer(img, &buf, &len, "Q", quality, NULL);
             break;
         case 1: /* PNG */
             ret = vips_pngsave_buffer(img, &buf, &len, NULL);
             break;
         case 2: /* WebP */
-            ret = (quality >= 0)
-                ? vips_webpsave_buffer(img, &buf, &len, "Q", quality, NULL)
-                : vips_webpsave_buffer(img, &buf, &len, NULL);
+            ret = vips_webpsave_buffer(img, &buf, &len, "Q", quality, NULL);
             break;
         case 3: /* AVIF */
-            ret = (quality >= 0)
-                ? vips_heifsave_buffer(img, &buf, &len, "Q", quality,
+            ret = vips_heifsave_buffer(img, &buf, &len, "Q", quality,
                                        "compression",
-                                       VIPS_FOREIGN_HEIF_COMPRESSION_AV1, NULL)
-                : vips_heifsave_buffer(img, &buf, &len, "compression",
                                        VIPS_FOREIGN_HEIF_COMPRESSION_AV1, NULL);
             break;
         case 4: /* TIFF */
