@@ -1,6 +1,7 @@
 (library
  (name vips)
  (public_name ocaml-vips)
+ (libraries unix)
  (c_library_flags
   (:include vips_c_flags.sexp))
  (foreign_stubs

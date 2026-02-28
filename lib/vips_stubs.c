@@ -85,6 +85,26 @@ CAMLprim value caml_vips_image_new_from_file(value path) {
     CAMLreturn(result);
 }
 
+CAMLprim value caml_vips_image_new_from_fd(value fd) {
+    CAMLparam1(fd);
+    CAMLlocal1(result);
+
+    VipsSource *source = vips_source_new_from_descriptor(Int_val(fd));
+    if (!source) {
+        raise_vips_error("vips_source_new_from_descriptor");
+    }
+
+    VipsImage *img = vips_image_new_from_source(source, "", NULL);
+    g_object_unref(source);  /* image holds its own ref, we can release ours */
+
+    if (!img) {
+        raise_vips_error("vips_image_new_from_source");
+    }
+
+    result = alloc_vips_image(img);
+    CAMLreturn(result);
+}
+
 CAMLprim value caml_vips_image_new_from_buffer(value buf) {
     CAMLparam1(buf);
     CAMLlocal1(result);

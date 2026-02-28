@@ -7,6 +7,8 @@ module Input = struct
   let load_file path = Stubs.load_file path
 
   let load_buffer buf = Stubs.load_buffer buf
+
+  let load_fd fd = Stubs.load_fd (Unix.dup fd)
 end
 
 module Output = struct

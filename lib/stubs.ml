@@ -5,6 +5,7 @@ external shutdown : unit -> unit = "caml_vips_shutdown"
 
 external load_file : string -> image = "caml_vips_image_new_from_file"
 external load_buffer : bytes -> image = "caml_vips_image_new_from_buffer"
+external load_fd : Unix.file_descr -> image = "caml_vips_image_new_from_fd"
 
 external save_file
   :  image

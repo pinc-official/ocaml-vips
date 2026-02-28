@@ -31,6 +31,7 @@ val shutdown : unit -> unit
 module Input : sig
   val load_file : string -> image
   val load_buffer : bytes -> image
+  val load_fd : Unix.file_descr -> image
 end
 
 module Output : sig
