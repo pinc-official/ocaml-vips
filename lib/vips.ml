@@ -28,8 +28,12 @@ module Metadata = struct
 end
 
 module Transform = struct
-  let resize img ~width ?(height = -1) ?(kernel = `Lanczos3) () =
-    Stubs.resize img width height (Helpers.kernel_to_int kernel)
+  let resize_width img ~width ?(kernel = `Lanczos3) () =
+    Stubs.resize_width img width (Helpers.kernel_to_int kernel)
+  ;;
+
+  let resize_height img ~height ?(kernel = `Lanczos3) () =
+    Stubs.resize_height img height (Helpers.kernel_to_int kernel)
   ;;
 
   let thumbnail ?width ?height img =

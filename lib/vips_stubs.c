@@ -224,13 +224,12 @@ CAMLprim value caml_vips_image_get_bands(value img_val) {
 /* Transform                                                          */
 /* ------------------------------------------------------------------ */
 
-CAMLprim value caml_vips_resize(value img_val, value width_val, value height_val, value kernel_val) {
-    CAMLparam4(img_val, width_val, height_val, kernel_val);
+CAMLprim value caml_vips_resize_width(value img_val, value width_val, value kernel_val) {
+    CAMLparam3(img_val, width_val, kernel_val);
     CAMLlocal1(result);
 
     VipsImage *img    = get_vips_image(img_val);
     int target_w      = Int_val(width_val);
-    int target_h      = Int_val(height_val); /* -1 = maintain aspect ratio */
     int kernel_int    = Int_val(kernel_val);
     VipsKernel kernel;
 
@@ -244,21 +243,43 @@ CAMLprim value caml_vips_resize(value img_val, value width_val, value height_val
     }
 
     int src_w = vips_image_get_width(img);
-    double hscale = (double)target_w / (double)src_w;
+    double scale = (double)target_w / (double)src_w;
 
     VipsImage *out = NULL;
 
-    if (target_h < 0) {
-        /* Uniform scale - maintain aspect ratio */
-        if (vips_resize(img, &out, hscale, "kernel", kernel, NULL) != 0)
-            raise_vips_error("vips_resize");
-    } else {
-        /* Scale to exact dimensions - may change aspect ratio */
-        int src_h  = vips_image_get_height(img);
-        double vscale = (double)target_h / (double)src_h;
-        if (vips_resize(img, &out, hscale, "vscale", vscale, "kernel", kernel, NULL) != 0)
-            raise_vips_error("vips_resize (with vscale)");
+    /* Uniform scale - maintain aspect ratio */
+    if (vips_resize(img, &out, scale, "kernel", kernel, NULL) != 0)
+        raise_vips_error("vips_resize");
+
+    result = alloc_vips_image(out);
+    CAMLreturn(result);
+}
+
+CAMLprim value caml_vips_resize_height(value img_val, value height_val, value kernel_val) {
+    CAMLparam3(img_val, height_val, kernel_val);
+    CAMLlocal1(result);
+
+    VipsImage *img    = get_vips_image(img_val);
+    int target_h      = Int_val(height_val);
+    int kernel_int    = Int_val(kernel_val);
+    VipsKernel kernel;
+
+    switch (kernel_int) {
+        case 0:  kernel = VIPS_KERNEL_NEAREST;  break;
+        case 1:  kernel = VIPS_KERNEL_LINEAR;   break;
+        case 2:  kernel = VIPS_KERNEL_CUBIC;    break;
+        case 3:  kernel = VIPS_KERNEL_MITCHELL; break;
+        case 4:  kernel = VIPS_KERNEL_LANCZOS2; break;
+        default: kernel = VIPS_KERNEL_LANCZOS3; break;
     }
+
+    int src_h = vips_image_get_height(img);
+    double scale = (double)target_h / (double)src_h;
+
+    VipsImage *out = NULL;
+
+    if (vips_resize(img, &out, scale, "kernel", kernel, NULL) != 0)
+        raise_vips_error("vips_resize");
 
     result = alloc_vips_image(out);
     CAMLreturn(result);

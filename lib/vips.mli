@@ -47,7 +47,8 @@ module Metadata : sig
 end
 
 module Transform : sig
-  val resize : image -> width:int -> ?height:int -> ?kernel:kernel -> unit -> image
+  val resize_width : image -> width:int -> ?kernel:kernel -> unit -> image
+  val resize_height : image -> height:int -> ?kernel:kernel -> unit -> image
 
   (** Produce a thumbnail from [img].
     - [~width] only → scale to width, preserve aspect ratio
